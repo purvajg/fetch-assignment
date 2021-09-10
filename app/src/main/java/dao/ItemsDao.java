@@ -20,6 +20,6 @@ public interface ItemsDao {
     @Query("SELECT DISTINCT listId FROM items ORDER BY listId ASC")
     LiveData<List<Integer>> getListIds();// this data should be populated to cache
 
-    @Query("SELECT name FROM items WHERE listId=:listId ORDER BY name ASC")
+    @Query("SELECT name FROM items WHERE listId=:listId AND name IS NOT NULL AND length(name) > 0 ORDER BY id ASC")
     LiveData<List<String>> getNames(int listId);
 }
