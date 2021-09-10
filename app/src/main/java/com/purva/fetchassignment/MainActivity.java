@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final ListIdAdapter adapter = new ListIdAdapter(new ListIdAdapter.ItemDiff());
+        final ListIdAdapter adapter = new ListIdAdapter(new ListIdAdapter.ItemDiff(),this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
