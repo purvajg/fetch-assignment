@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FetchAssignment</string>
+    <string name="no_data">Nothing to show, try again later</string>
 </resources>

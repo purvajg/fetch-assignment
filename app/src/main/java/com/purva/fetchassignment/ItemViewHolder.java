@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ItemViewHolder extends RecyclerView.ViewHolder {
+public class ItemViewHolder extends RecyclerView.ViewHolder{
 
     private final TextView listIdItemView;
 
@@ -17,8 +17,13 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         listIdItemView = itemView.findViewById(R.id.textView);
     }
 
-    public void bind(Integer id) {
-        listIdItemView.setText(String.valueOf(id));
+    public void bind(Integer id, String text) {
+        if(id!=null) {
+            listIdItemView.setText(String.valueOf(id));
+        } else {
+            listIdItemView.setText(text);
+        }
+
     }
 
     static ItemViewHolder create(ViewGroup parent) {

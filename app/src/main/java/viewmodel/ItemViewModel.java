@@ -23,7 +23,7 @@ public class ItemViewModel extends AndroidViewModel {
         return itemRepository.getListIds();
     }
 
-    LiveData<List<String>> getNames(int listId) {
+    public LiveData<List<String>> getNames(int listId) {
         return itemRepository.getItemNames(listId);
     }
 }

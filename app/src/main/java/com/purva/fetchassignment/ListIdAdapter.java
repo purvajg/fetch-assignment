@@ -1,17 +1,22 @@
 package com.purva.fetchassignment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import model.Item;
-
 public class ListIdAdapter extends ListAdapter<Integer, ItemViewHolder> {
 
-    public ListIdAdapter(@NonNull DiffUtil.ItemCallback<Integer> diffCallback) {
+    private Context context;
+
+    public ListIdAdapter(@NonNull DiffUtil.ItemCallback<Integer> diffCallback, Context context
+    ) {
         super(diffCallback);
+        this.context = context;
     }
 
     @NonNull
@@ -23,8 +28,22 @@ public class ListIdAdapter extends ListAdapter<Integer, ItemViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Integer item = getItem(position);
-        holder.bind(item);
+        System.out.println("item :"+item);
+        holder.bind(item, null);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, NamesActivity.class);
+                intent.putExtra("listId",item);
+
+                context.startActivity(intent);
+            }
+        });
+
+
     }
+
 
     static class ItemDiff extends DiffUtil.ItemCallback<Integer> {
 
@@ -38,4 +57,5 @@ public class ListIdAdapter extends ListAdapter<Integer, ItemViewHolder> {
             return oldItem.equals(newItem);
         }
     }
+
 }

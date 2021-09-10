@@ -4,9 +4,6 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -21,8 +18,7 @@ import model.Item;
 import model.Metadata;
 
 public class ItemRepository {
-    private static final String BUCKET = "fetch-hiring";
-    private static final String KEY = "hiring.json";
+    private static final String PRESIGNED_URL = "https://fetch-hiring.s3.amazonaws.com/hiring.json";
 
     private ItemsDao itemsDao;
 
@@ -36,7 +32,7 @@ public class ItemRepository {
         ItemDatabase db = ItemDatabase.getDatabase(application);
         itemsDao = db.itemsDao();
         metadataDao = db.metadataDao();
-        s3Dao = new S3BasedPayloadDao(new AmazonS3Client(new BasicAWSCredentials("AKIARDZZYLVT6YQ2VPFE", "NInT5WkJvF164PdxVRjCCGSEai+E+XE2VeOF0FWa")), application);
+        s3Dao = new S3BasedPayloadDao();
         executor  = Executors.newFixedThreadPool(5);
     }
 
@@ -57,18 +53,18 @@ public class ItemRepository {
             System.out.println("InterruptedException "+e);
         }
 
-        ObjectMetadata objectMetadata = null;
+        Long lastModified = null;
         try {
-            objectMetadata = executor.submit(() -> s3Dao.readFileMetadata(BUCKET, KEY)).get();
+            lastModified = executor.submit(() -> s3Dao.readFileMetadata(PRESIGNED_URL)).get();
         } catch (ExecutionException e) {
             e.printStackTrace(); //todo -add logging
         } catch (InterruptedException e) {
             e.printStackTrace(); // todo - add logging
         } finally {
-            if(objectMetadata != null && (latestTimestamp == null ||  objectMetadata.getLastModified().getTime() > latestTimestamp)) {
+            if(lastModified != null && (latestTimestamp == null ||  lastModified > latestTimestamp)){
                 insertItemObjects();
-                ObjectMetadata finalObjectMetadata = objectMetadata;
-                ItemDatabase.databaseWriteExecutor.execute(() -> metadataDao.insert(new Metadata((Long) finalObjectMetadata.getLastModified().getTime())));;
+                long finalLastModified = lastModified;
+                ItemDatabase.databaseWriteExecutor.execute(() -> metadataDao.insert(new Metadata(finalLastModified)));;
             }
         }
 
@@ -81,7 +77,7 @@ public class ItemRepository {
 
     public void insertItemObjects(){
         try {
-            List<Item> items = executor.submit(() -> s3Dao.readData(BUCKET, KEY)).get();
+            List<Item> items = executor.submit(() -> s3Dao.readData(PRESIGNED_URL)).get();
             for(int i=0; i<items.size(); i++){
                 final Item item = items.get(i);
                 ItemDatabase.databaseWriteExecutor.execute(() -> itemsDao.insert(item));
