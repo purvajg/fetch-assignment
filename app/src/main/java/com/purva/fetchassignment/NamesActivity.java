@@ -45,7 +45,6 @@ public class NamesActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras!=null){
             listId = extras.getInt("listId");
-            System.out.println("listId: "+listId);
         }
 
         itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);

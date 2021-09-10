@@ -39,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.submitList(ids);
 
                 if (ids.isEmpty()) {
-                    TextView textView = (TextView) findViewById(R.id.empty);
-                    System.out.println("textView :" + textView);
+                    TextView textView = findViewById(R.id.empty);
                     textView.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
                 }

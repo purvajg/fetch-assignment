@@ -28,7 +28,6 @@ public class ListIdAdapter extends ListAdapter<Integer, ItemViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Integer item = getItem(position);
-        System.out.println("item :"+item);
         holder.bind(item, null);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

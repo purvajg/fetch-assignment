@@ -1,38 +1,3 @@
-//package com.purva.fetchassignment;
-//
-//import android.view.ViewGroup;
-//
-//import androidx.annotation.NonNull;
-//import androidx.recyclerview.widget.DiffUtil;
-//import androidx.recyclerview.widget.ListAdapter;
-//import androidx.recyclerview.widget.RecyclerView;
-//
-//import model.Item;
-//
-//public class ListIdAdapter extends RecyclerView.Adapter<ListIdAdapter.MyViewHolder> {
-//
-//    public ListAdapter(){
-//
-//    }
-//
-//    @NonNull
-//    @Override
-//    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        return null;
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-//
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return 0;
-//    }
-//}
-
-
 package com.purva.fetchassignment;
 
 import android.view.ViewGroup;
