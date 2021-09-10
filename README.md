@@ -1,4 +1,6 @@
 <h1>Demo of the app :</h1>
+https://youtu.be/Dyv7E_sddAc
+
 
 <h1>Goal:</h1>
 <p> Display this list of items to the user based on the following requirements: </p>
@@ -160,3 +162,14 @@ id  | listId | name
 <li>A screen showing Child list (names list)</li>
 <li>Handle network disconnectivity</li>
 <li>Handle empty/null data</li>
+
+
+<h1>Screen shots :</h1>
+
+![](https://i.ibb.co/7NSX8Ch/fetch-parent-list.jpg)
+
+![](https://i.ibb.co/T1cFCCL/fetch-child-list.jpg)
+
+![No network connection toast](https://i.ibb.co/F7DTGfP/fetch-no-network.jpg)
+
+![Empty data](https://i.ibb.co/BKSc3cc/fetch-screen-shot-no-data.jpg)
