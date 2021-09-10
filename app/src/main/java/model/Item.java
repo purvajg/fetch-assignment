@@ -10,6 +10,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.sql.Timestamp;
 
+/*
+Annotations are required to assocaite the variables with the Room database.
+Room uses this information to generate code.
+ */
+
 @Entity(tableName = "items")
 @JsonDeserialize
 public class Item {
@@ -28,7 +33,7 @@ public class Item {
 
 
     Item() {
-
+        // Unused constructor , required for Jackson de-serialization
     }
 
     Item(@NonNull int id, @NonNull int listId, String name){

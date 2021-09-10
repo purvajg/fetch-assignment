@@ -1,6 +1,7 @@
 package repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -17,23 +18,33 @@ import db.ItemDatabase;
 import model.Item;
 import model.Metadata;
 
+/*
+Separate Threads used in the following activities, to avoid blocking
+the main(UI) thread:
+- Data insertion
+- Data retrieval
+Note: Usage can be found  in ItemRepository class
+Repository decides if the data is to be used from S3 or Room(local database)
+ */
+
 public class ItemRepository {
     private static final String PRESIGNED_URL = "https://fetch-hiring.s3.amazonaws.com/hiring.json";
-
+    private static final String TAG = ItemRepository.class.getSimpleName();
+    public static final int MAX_THREADS = 5;
     private ItemsDao itemsDao;
 
     private MetadataDao metadataDao;
 
     private S3BasedPayloadDao s3Dao;
 
-    private ExecutorService executor;
+    private ExecutorService executor; //for spawning separate threads
 
     public ItemRepository(Application application) {
         ItemDatabase db = ItemDatabase.getDatabase(application);
         itemsDao = db.itemsDao();
         metadataDao = db.metadataDao();
         s3Dao = new S3BasedPayloadDao();
-        executor  = Executors.newFixedThreadPool(5);
+        executor  = Executors.newFixedThreadPool(MAX_THREADS);
     }
 
     public LiveData<List<Integer>> getListIds() {
@@ -46,20 +57,18 @@ public class ItemRepository {
         try {
             latestTimestamp = ItemDatabase.databaseWriteExecutor.submit(() -> metadataDao.getLatestTimestamp()).get();
         } catch (ExecutionException e) {
-            e.printStackTrace();
-            System.out.println("ExecutionException "+e);
+            Log.e(TAG, "Received execution exception "+e.getMessage());
         } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.out.println("InterruptedException "+e);
+            Log.e(TAG, "Received interrupted exception "+e.getMessage());
         }
 
         Long lastModified = null;
         try {
             lastModified = executor.submit(() -> s3Dao.readFileMetadata(PRESIGNED_URL)).get();
         } catch (ExecutionException e) {
-            e.printStackTrace(); //todo -add logging
+            Log.e(TAG, "Received execution exception "+e.getMessage());
         } catch (InterruptedException e) {
-            e.printStackTrace(); // todo - add logging
+            Log.e(TAG, "Received interrupted exception "+e.getMessage());
         } finally {
             if(lastModified != null && (latestTimestamp == null ||  lastModified > latestTimestamp)){
                 insertItemObjects();
@@ -75,18 +84,17 @@ public class ItemRepository {
         return itemsDao.getNames(listId);
     }
 
-    public void insertItemObjects(){
+    private void insertItemObjects(){
         try {
             List<Item> items = executor.submit(() -> s3Dao.readData(PRESIGNED_URL)).get();
             for(int i=0; i<items.size(); i++){
                 final Item item = items.get(i);
-                ItemDatabase.databaseWriteExecutor.execute(() -> itemsDao.insert(item));
+                ItemDatabase.databaseWriteExecutor.execute(() -> itemsDao.insert(item));// separate thread
             }
         } catch (InterruptedException e) {
-            //TODO - add logging
+            Log.e(TAG, "Received interrupted exception "+e.getMessage());
         } catch (ExecutionException e) {
-            //TODO - add logging
-            System.out.println("ExecutionException "+e);
+            Log.e(TAG, "Received execution exception "+e.getMessage());
         }
     }
 }
