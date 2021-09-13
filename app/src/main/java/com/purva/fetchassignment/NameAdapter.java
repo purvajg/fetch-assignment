@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 public class NameAdapter extends ListAdapter<String, ItemViewHolder> {
 
 
-    protected NameAdapter(@NonNull DiffUtil.ItemCallback<String> diffCallback, NamesActivity namesActivity) {
+    protected NameAdapter(@NonNull DiffUtil.ItemCallback<String> diffCallback) {
         super(diffCallback);
     }
 
@@ -26,15 +26,15 @@ public class NameAdapter extends ListAdapter<String, ItemViewHolder> {
     }
 
 
-    static class ItemDiff extends DiffUtil.ItemCallback<Integer> {
+    static class ItemDiff extends DiffUtil.ItemCallback<String> {
 
         @Override
-        public boolean areItemsTheSame(@NonNull Integer oldItem, @NonNull Integer newItem) {
+        public boolean areItemsTheSame(@NonNull String oldItem, @NonNull String newItem) {
             return oldItem.equals(newItem);
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Integer oldItem, @NonNull Integer newItem) {
+        public boolean areContentsTheSame(@NonNull String oldItem, @NonNull String newItem) {
             return oldItem.equals(newItem);
         }
     }

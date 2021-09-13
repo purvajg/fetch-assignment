@@ -26,17 +26,7 @@ public class NamesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final NameAdapter adapter = new NameAdapter(new DiffUtil.ItemCallback<String>() {
-            @Override
-            public boolean areItemsTheSame(@NonNull String oldItem, @NonNull String newItem) {
-                return true;
-            }
-
-            @Override
-            public boolean areContentsTheSame(@NonNull String oldItem, @NonNull String newItem) {
-                return false;
-            }
-        },this);
+        final NameAdapter adapter = new NameAdapter(new NameAdapter.ItemDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
