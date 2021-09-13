@@ -6,9 +6,6 @@ import android.net.NetworkInfo;
 import android.widget.Toast;
 
 public class CheckNetwork {
-    private static final String TAG = CheckNetwork.class.getSimpleName();
-
-
     public static boolean isInternetAvailable(Context context) {
         NetworkInfo info = (NetworkInfo) ((ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();

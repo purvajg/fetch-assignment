@@ -25,26 +25,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(CheckNetwork.isInternetAvailable(this)) {
-            setContentView(R.layout.activity_main);
 
+        CheckNetwork.isInternetAvailable(this);
 
-            RecyclerView recyclerView = findViewById(R.id.recyclerview);
-            final ListIdAdapter adapter = new ListIdAdapter(new ListIdAdapter.ItemDiff(), this);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        setContentView(R.layout.activity_main);
 
-            itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
-            itemViewModel.getListIds().observe(this, ids -> {
-                adapter.submitList(ids);
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        final ListIdAdapter adapter = new ListIdAdapter(new ListIdAdapter.ItemDiff(), this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-                if (ids.isEmpty()) {
-                    TextView textView = findViewById(R.id.empty);
-                    textView.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }
-            });
-        }
+        itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
+        itemViewModel.getListIds().observe(this, ids -> {
+            adapter.submitList(ids);
+
+            if (ids.isEmpty()) {
+                TextView textView = findViewById(R.id.empty);
+                textView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
